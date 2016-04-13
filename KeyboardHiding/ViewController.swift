@@ -19,7 +19,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "hideKeyboard")
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.hideKeyboard))
         
         // prevents the scroll view from swallowing up the touch event of child buttons
         tapGesture.cancelsTouchesInView = false
@@ -56,28 +56,28 @@ class ViewController: UIViewController {
 
     //MARK: Keyboard Avoidance
     func registerForKeyboardNotifications() -> Void {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWasShown:", name: UIKeyboardDidShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWasShown:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.keyboardWasShown(_:)), name: UIKeyboardDidShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.keyboardWasShown(_:)), name: UIKeyboardWillShowNotification, object: nil)
 
     }
     
     func deregisterFromKeyboardNotifications() -> Void {
-        println("Deregistering!")
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWasShown:", name: UIKeyboardDidHideNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWasShown:", name: UIKeyboardWillHideNotification, object: nil)
+        print("Deregistering!")
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.keyboardWasShown(_:)), name: UIKeyboardDidHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.keyboardWasShown(_:)), name: UIKeyboardWillHideNotification, object: nil)
         
     }
     
     func keyboardWasShown(notification: NSNotification) {
         var info: Dictionary = notification.userInfo!
-        var keyboardSize: CGSize = (info[UIKeyboardFrameBeginUserInfoKey]?.CGRectValue().size)!
-        var buttonOrigin: CGPoint = self.signin.frame.origin;
-        var buttonHeight: CGFloat = self.signin.frame.size.height;
+        let keyboardSize: CGSize = (info[UIKeyboardFrameBeginUserInfoKey]?.CGRectValue().size)!
+        let buttonOrigin: CGPoint = self.signin.frame.origin;
+        let buttonHeight: CGFloat = self.signin.frame.size.height;
         var visibleRect: CGRect = self.view.frame
         visibleRect.size.height -= keyboardSize.height
         
         if (!CGRectContainsPoint(visibleRect, buttonOrigin)) {
-            var scrollPoint: CGPoint = CGPointMake(0.0, buttonOrigin.y - visibleRect.size.height + buttonHeight + 4)
+            let scrollPoint: CGPoint = CGPointMake(0.0, buttonOrigin.y - visibleRect.size.height + buttonHeight + 4)
             self.scrollView.setContentOffset(scrollPoint, animated: true)
             
         }
